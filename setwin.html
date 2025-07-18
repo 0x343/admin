@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Set Winner</title>
+    <title>Faylotto Set Winner</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.3/web3.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -29,7 +29,6 @@ body {
     align-items: center;
 }
 
-/* Button */
 button {
     padding: 12px 20px;
     margin: 10px;
@@ -48,7 +47,6 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* Input */
 input {
     padding: 12px;
     margin: 5px;
@@ -73,7 +71,6 @@ input:focus {
     box-shadow: 0 0 20px rgba(0, 150, 255, 0.9);
 }
 
-/* Status */
 #status, #withdrawStatus {
     font-weight: bold;
     text-shadow: 0 0 10px rgba(0, 150, 255, 0.7);
@@ -120,14 +117,12 @@ let userAccount;
 let contract;
 let ownerAddress;
 
-// Wallet Connection
-// Cek apakah wallet sudah terhubung sebelumnya tanpa menghubungkan otomatis
 async function checkWalletConnection() {
     if (window.ethereum) {
         try {
             const accounts = await ethereum.request({ method: "eth_accounts" });
             if (accounts.length > 0) {
-                document.getElementById("walletAddress").innerText = "Wallet: (Not Connected)"; // Tidak langsung terhubung
+                document.getElementById("walletAddress").innerText = "Wallet: (Not Connected)"
             }
         } catch (error) {
             console.error("Error checking wallet connection:", error);
@@ -135,7 +130,6 @@ async function checkWalletConnection() {
     }
 }
 
-// Fungsi untuk menghubungkan wallet secara manual
 async function connectWallet() {
     if (!window.ethereum) {
         alert("Metamask not found! Please install Metamask.");
@@ -153,7 +147,6 @@ async function connectWallet() {
     }
 }
 
-// Update UI setelah wallet terhubung
 async function updateUIAfterConnect() {
     document.getElementById("walletAddress").innerText = "Wallet: " + userAccount;
 
@@ -178,7 +171,6 @@ btn.setAttribute("onclick", "disconnectWallet()");
     getContractBalance();
 }
 
-// Fungsi untuk mendapatkan saldo kontrak
 async function getContractBalance() {
     if (!web3 || !contract) {
         console.warn("Web3 or contract is not initialized yet.");
@@ -195,7 +187,6 @@ async function getContractBalance() {
     }
 }
 
-// Fungsi untuk "Disconnect" Wallet (Metamask tidak mendukung disconnect manual)
 function disconnectWallet() {
     userAccount = null;
     document.getElementById("walletAddress").innerText = "Wallet: Not Connected";
@@ -209,10 +200,8 @@ function disconnectWallet() {
     alert("Wallet disconnected! Refresh the page to fully reset connection.");
 }
 
-// Hanya cek apakah wallet ada, tanpa langsung menghubungkan
 window.onload = checkWalletConnection;
         
-// Set Winner (Only The Owner)
 async function setWinner() {
     if (!userAccount) {
         alert("Please connect your wallet first!");
@@ -227,7 +216,7 @@ async function setWinner() {
     const winner = document.getElementById("winnerAddress").value;
     const amount = document.getElementById("winnerAmount").value;
     const betId = document.getElementById("betId").value;
-    const betNumber = document.getElementById("betNumber").value; // ID diperbaiki dari "Number" menjadi "betNumber"
+    const betNumber = document.getElementById("betNumber").value;
 
     if (!winner || amount <= 0) {
         alert("Enter a valid winner address and ETH amount!");
@@ -248,7 +237,6 @@ async function setWinner() {
     statusElement.style.color = "#aaffaa";
 
     try {
-        // Memanggil smart contract dengan tambahan parameter betId dan betNumber
         const tx = await contract.methods.setWinner(
             winner, 
             web3.utils.toWei(amount, "ether"), 
@@ -272,7 +260,6 @@ async function setWinner() {
         txLink.style.fontSize = "8px";
         txLink.target = "_blank";
 
-        // Update status
         statusElement.appendChild(successIcon);
         statusElement.appendChild(document.createTextNode(" Winner Added! Tx: "));
         statusElement.appendChild(txLink);
@@ -294,7 +281,6 @@ async function setWinner() {
     }
 }
 
-// Withdraw ETH (Only The Owner)
 async function withdrawETH() {
     if (!userAccount) {
         alert("Please connect your wallet first!");
